@@ -1,0 +1,7 @@
+---
+# defaults file for roles/run-python-script
+script_name:
+script_local_path:
+script_remote_path:
+python_libraries:
+python_pip_libraries: 

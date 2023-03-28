@@ -1,0 +1,4 @@
+---
+# defaults file for roles/content-in-file
+file_content:
+destination_content:

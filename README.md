@@ -1,2 +1,1 @@
-# zanzibar-ansible
- 
+# ansible-zanzibar

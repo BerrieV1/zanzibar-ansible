@@ -1,0 +1,6 @@
+---
+# tasks file for roles/copy-file
+- name: Copy file
+  copy:
+    src: "{{ source }}"
+    dest: "{{ destination }}"

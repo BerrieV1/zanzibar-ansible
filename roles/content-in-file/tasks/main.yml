@@ -1,0 +1,6 @@
+---
+# tasks file for roles/content-in-file
+- name: Content in file
+  copy:
+    dest: "{{ destination_content }}"
+    content: "{{ file_content }}"

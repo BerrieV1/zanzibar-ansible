@@ -1,0 +1,5 @@
+---
+# defaults file for roles/copy-file
+filename:
+source:
+destination:

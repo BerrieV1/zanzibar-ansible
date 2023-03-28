@@ -1,0 +1,7 @@
+---
+# tasks file for roles/reload-services
+- name: Reload services
+  service:
+    name: "{{ item }}"
+    state: reloaded
+  with_items: "{{ services_to_reload }}"

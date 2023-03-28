@@ -1,0 +1,74 @@
+- name: Deploy Nginx Reverse Proxy with Grafana and Node-RED
+  hosts: reverse-proxy
+  become: true
+  vars:
+    packages:
+      - nginx
+      - certbot
+      - grafana
+      - nodejs
+      - python3-certbot-nginx
+    domains:
+      - grafana.iot-ap.be
+      - nodered.iot-ap.be
+    email: "{{ lookup("env", "EMAIL") }}"
+    ip_address: "{{ ansible_host }}"
+    destination_content: "/etc/nginx/sites-available/default"
+    file_content: |
+      server {
+        listen 80;
+        server_name {{ domains | join(' ') }};
+        return 301 https://$host$request_uri;
+      }
+
+      {% for domain in domains %}
+      server {
+        listen 443 ssl;
+        server_name {{ domain }};
+
+        ssl_certificate /etc/letsencrypt/live/{{ domain }}/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/{{ domain }}/privkey.pem;
+
+        location / {
+            {% if domain == 'grafana.iot-ap.be' %}
+        proxy_pass              http://{{ ip_address }}:3000;
+            {% else %}
+        proxy_pass              http://{{ ip_address }}:1880;
+            {% endif %}
+            proxy_set_header        Host $host;
+            proxy_set_header        X-Real-IP $remote_addr;
+            proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header        X-Forwarded-Proto $scheme;
+        }
+      }
+      {% endfor %}
+    keys:
+      - https://nginx.org/keys/nginx_signing.key
+      - https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+      - https://packages.grafana.com/gpg.key
+    repos:
+      - deb https://packages.grafana.com/oss/deb stable main
+      - deb https://deb.nodesource.com/node_14.x bullseye main
+    npm_package: "node-red"
+    services_to_start:
+      - grafana-server
+      - docker
+    services_to_reload:
+      - nginx
+    script_name: "make-dashboard.py"
+    script_local_path: "{{ lookup("env", "LOCAL_PATH") }}{{ script_name }}"
+    script_remote_path: "/root/{{ script_name }}"
+    python_pip_libraries:
+      - requests
+
+  roles:
+    - role: update-system
+    - role: add-keys
+    - role: add-repos
+    - role: install-packages
+    - role: npm-install-package
+    - role: content-in-file
+    - role: generate-certs
+    - role: start-services
+    - role: run-python-script
+    - role: reload-services

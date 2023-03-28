@@ -1,0 +1,8 @@
+---
+# tasks file for roles/start-services
+- name: Start services on boot
+  systemd:
+    name: "{{ item }}"
+    enabled: yes
+    state: started
+  with_items: "{{ services_to_start }}"

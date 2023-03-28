@@ -1,0 +1,6 @@
+---
+# tasks file for roles/add-repos
+- name: Add repositories
+  apt_repository:
+    repo: "{{ item }}"
+  with_items: "{{ repos }}"

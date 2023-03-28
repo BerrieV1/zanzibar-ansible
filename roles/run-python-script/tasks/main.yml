@@ -1,0 +1,26 @@
+---
+# tasks file for roles/run-python-script
+- name: Install python & pip
+  apt:
+    name:
+      - python
+      - pip
+    state: present
+
+- name: Install pip libraries
+  pip:
+    name: "{{ item }}"
+  with_items: "{{ python_pip_libraries }}"
+
+- name: Install libraries
+  apt:
+    name: "{{ item }}"
+  with_items: "{{ python_libraries }}"
+
+- name: Copy script to remote
+  copy:
+    src: "{{ script_local_path }}"
+    dest: "{{ script_remote_path }}"
+
+- name: Run script
+  command: python3 "{{ script_remote_path }}"

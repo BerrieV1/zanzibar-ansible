@@ -1,0 +1,7 @@
+---
+# tasks file for roles/install-packages
+- name: Install packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ packages }}"

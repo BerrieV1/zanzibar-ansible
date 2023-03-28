@@ -1,0 +1,14 @@
+---
+# tasks file for roles/generate-certs
+- name: Generate SSL certificates
+  command: certbot certonly --agree-tos --email "{{ email }}" --standalone -d {{ item }}
+  args:
+    creates: "/etc/letsencrypt/live/{{ item }}"
+  with_items: "{{ domains }}"
+
+- name: Renew certificates
+  cron:
+    name: "Renew SSL certs"
+    job: "certbot renew --quiet --post-hook 'systemctl reload nginx'"
+    minute: "0"
+    hour: "0"

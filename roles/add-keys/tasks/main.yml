@@ -1,0 +1,7 @@
+---
+# tasks file for roles/add-keys
+- name: Add keys
+  apt_key:
+    url: "{{ item }}"
+    state: present
+  with_items: "{{ keys }}"

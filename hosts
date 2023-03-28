@@ -1,0 +1,2 @@
+[zanzibar]
+reverse-proxy ansible_host=5.75.189.157 ansible_user=root
