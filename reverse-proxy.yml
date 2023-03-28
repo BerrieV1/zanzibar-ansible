@@ -5,8 +5,8 @@
     packages:
       - nginx
       - certbot
-      - grafana
-      - nodejs
+    #  - grafana
+    #  - nodejs
       - python3-certbot-nginx
     domains:
       - grafana.iot-ap.be
@@ -44,15 +44,15 @@
       {% endfor %}
     keys:
       - https://nginx.org/keys/nginx_signing.key
-      - https://deb.nodesource.com/gpgkey/nodesource.gpg.key
-      - https://packages.grafana.com/gpg.key
+    #  - https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+    #  - https://packages.grafana.com/gpg.key
     repos:
-      - deb https://packages.grafana.com/oss/deb stable main
-      - deb https://deb.nodesource.com/node_14.x bullseye main
-    npm_package: "node-red"
+    #  - deb https://packages.grafana.com/oss/deb stable main
+    #  - deb https://deb.nodesource.com/node_14.x bullseye main
+    #npm_package: "node-red"
     services_to_start:
-      - grafana-server
-      - docker
+    #  - grafana-server
+    #  - docker
     services_to_reload:
       - nginx
     script_name: "make-dashboard.py"
@@ -63,12 +63,12 @@
 
   roles:
     - role: update-system
-    - role: add-keys
-    - role: add-repos
+    #- role: add-keys
+    #- role: add-repos
     - role: install-packages
-    - role: npm-install-package
+    #- role: npm-install-package
     - role: content-in-file
     - role: generate-certs
-    - role: start-services
+    #- role: start-services
     - role: run-python-script
     - role: reload-services
